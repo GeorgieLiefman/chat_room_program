@@ -1,3 +1,11 @@
+"""This program contains the classes used by the client in a multi-user online chatroom.
+
+The program contains the classes and functions needed to send and receive messages over a network. 
+The socket module is implemented to establish a user socket which can connect to a server. The threading
+module is also used to allow each user to have their own individuals threads running with the host. Thereby,
+enabling them to communicate with the host regardless of other users."""
+
+# Import socket and threading modules in the program
 import socket as s, threading as t
 
 # User input to allow users to choose the username they wish to be displayed in the chatroom
@@ -36,7 +44,7 @@ class UserSocket:
         to the host and communicate with them once the connection has been established.
 
         Args:
-            self: A parameter which means the necessary properties for the user socket will 
+            self: A varaible which means the necessary properties for the user socket will 
             be inherited from the above __init__ method.
         
         Returns:
@@ -126,3 +134,7 @@ class UserThreading:
     def __init__(self):
         self.accquire_text = t.Thread(target=DataTransfers.accquire_information) 
         self.compose_text = t.Thread(target=DataTransfers.send_information) 
+        """Initilises the propeties of the class to create threading in the chatroom.
+
+        The variables contain the functions which create two threads for each user between them and the client.
+        These threads relate to the sending and receiving of communications."""
