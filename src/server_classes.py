@@ -88,7 +88,7 @@ class UserInformationAndInteractions:
                 self.users.remove(user)
                 user.close()
                 username = self.usernames[guide]
-                self.relay_information("{} has exited the chat room.".format(username).encode('UTF-8'))
+                self.relay_information("{} has exited the chat room.".format(username).encode("UTF-8"))
                 self.usernames.remove(username)
                 break
         """Dispatches and accepts texts from users and deletes users from the chat room.
@@ -114,13 +114,13 @@ class UserInformationAndInteractions:
         while True:
             user, identifier = host_socket.accept()
             print("A new user has joined on {}".format(str(identifier)))       
-            user.send('USERNAME'.encode('UTF-8'))
-            username = user.recv(1024).decode('UTF-8')
+            user.send('USERNAME'.encode("UTF-8"))
+            username = user.recv(1024).decode("UTF-8")
             self.usernames.append(username)
             self.users.append(user)
             print("For their username a new user has chosen {}".format(username))
-            self.relay_information("{} has connected to the chat room!".format(username).encode('UTF-8'))
-            user.send('\nYou have successfully joined the chat room.'.encode('UTF-8'))
+            self.relay_information("{} has connected to the chat room!".format(username).encode("UTF-8"))
+            user.send("\nYou have successfully joined the chat room.".encode("UTF-8"))
             text = t.Thread(target=self.manage_users, args=(user,))
             text.start()
             """Accepts multiple new clients.
