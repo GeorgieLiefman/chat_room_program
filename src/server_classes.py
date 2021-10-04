@@ -120,7 +120,7 @@ class UserInformationAndInteractions:
             self.users.append(user)
             print("For their username a new user has chosen {}".format(username))
             self.relay_information("{} has connected to the chatroom!".format(username).encode('UTF-8'))
-            user.send('You have successfully joined the chatroom.'.encode('UTF-8'))
+            user.send('\nYou have successfully joined the chatroom.'.encode('UTF-8'))
             text = t.Thread(target=self.manage_users, args=(user,))
             text.start()
         
@@ -130,9 +130,9 @@ class UserInformationAndInteractions:
 
             The function accepts multple new clients through threading. Once a client has been accepted a
             print statement will be exectued informing the host the address by which the new user has joined.
-            The server will then prompt new users to enter the username they wish to be known as through an
-            encoded message. It will then decode the text it receieves bach through said user and a print
-            statement will be executed informing the server the name they have chosen. 
+            The server will receive an encoded message from the user containing the username they have chosen
+            to be known as for the chat. It will then decode the text it receieves and a print statement will 
+            be executed informing the server the name they have chosen. 
 
             The server will then inform all clients that a new user has joined the chatroom and inform them of
             their chosen nickname. The new user will also receive a message from the host informing them they

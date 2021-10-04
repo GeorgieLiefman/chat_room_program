@@ -81,7 +81,7 @@ class DataTransfers:
         The functions uses UTF-8 to both encode and decode any communication that a user sends or 
         receives from the server.
         
-        Upon connecting to the host users will be prompted to input a username. Users then enter a 
+        Upon starting the program users will be prompted to input a username. Users then enter a 
         name which will be sent in an encoded message to the host. Once the host recieves and decodes
         this communication, it will register the name and new user, allowing them to join the chatroom.
 
