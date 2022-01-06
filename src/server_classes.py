@@ -22,18 +22,17 @@ class ServerSocket:
        ip: A string which contains the IP address that will be used when connecting to users.
        port: An integer which contains the port number that will be used when connecting to users."""
 
+
     def __init__(self):
-        self.ip = "127.0.0.1"
-        self.port_number = 65432
         """Initialises the properties of the class to create the host socket used in the chat room.
 
         The ip and port number properties provide the necessary address details for the server to accept
         users."""
+        self.ip = "127.0.0.1"
+        self.port_number = 65432
         
-    def start_server(self):    
-        host_socket.bind((self.ip, self.port_number))                                               
-        host_socket.listen()
-        print("Server booted, please standby waiting for users to connect.")
+    
+    def start_server(self):   
         """Binds the host to an IP address and port and listens for new connections.
 
         By binding the host to the set IP address and port it makes it so the server will now only
@@ -43,8 +42,10 @@ class ServerSocket:
         
         Args:
             self: A variable which means the necessary properties for the server socket will
-            be inherited from the above __init__ method."""
-
+            be inherited from the above __init__ method.""" 
+        host_socket.bind((self.ip, self.port_number))                                               
+        host_socket.listen()
+        print("Server booted, please standby waiting for users to connect.")
 
 
 class UserInformationAndInteractions:
@@ -57,17 +58,17 @@ class UserInformationAndInteractions:
         users: A list which will store the users who have joined the chat room.
         usernames: A list which will store the usernames of clients who have joined the chat room."""
 
+
     def __init__(self):
-        self.users = []
-        self.usernames = []
         """Initialises the properties of the class to create lists for user information.
 
             The lists will be appended each time a new client joins the chat room or if any client
             leaves or is disconnected from the server for whatever reason."""
+        self.users = []
+        self.usernames = []
+        
     
-    def relay_information(self, communication):                                                 
-        for user in self.users:
-            user.send(communication)
+    def relay_information(self, communication):  
         """Sends texts to users in the list of users.
 
         The function transmits texts to all of the users found in the list of users.
@@ -76,21 +77,12 @@ class UserInformationAndInteractions:
             self: A variable which means the necessary properties for the server socket will 
             be inherited from the above __init__ method.
             communication: A variable which is informed by a later function when users send a text
-            to the server."""
+            to the server."""                                               
+        for user in self.users:
+            user.send(communication)
+        
 
-    def manage_users(self, user):                                         
-        while True:
-            try:                                                            
-                communication = user.recv(1024)
-                self.relay_information(communication)
-            except:                                                         
-                guide = self.users.guide(user)
-                self.users.remove(user)
-                user.close()
-                username = self.usernames[guide]
-                self.relay_information("{} has exited the chat room.".format(username).encode("UTF-8"))
-                self.usernames.remove(username)
-                break
+    def manage_users(self, user):   
         """Dispatches and accepts texts from users and deletes users from the chat room.
  
         The function uses UTF-8 to encode any communication that the server has with users.
@@ -108,22 +100,23 @@ class UserInformationAndInteractions:
             the host deletes the user (who has raised an error) from the chat room. The user's socket is then
             closed and they are removed from both the user and username list. A message is also relayed
             to all users still in the user list informing them that a user (identified by their username)
-            has left the chat room. This process is also followed if a user manually exits the chat room."""
-
-    def accept_new_users(self):                                                          
+            has left the chat room. This process is also followed if a user manually exits the chat room."""                                      
         while True:
-            user, identifier = host_socket.accept()
-            print("A new user has joined on {}".format(str(identifier)))       
-            user.send('USERNAME'.encode("UTF-8"))
-            username = user.recv(1024).decode("UTF-8")
-            self.usernames.append(username)
-            self.users.append(user)
-            print("For their username a new user has chosen {}".format(username))
-            self.relay_information("{} has connected to the chat room!".format(username).encode("UTF-8"))
-            user.send("\nYou have successfully joined the chat room.".encode("UTF-8"))
-            text = t.Thread(target=self.manage_users, args=(user,))
-            text.start()
-            """Accepts multiple new clients.
+            try:                                                            
+                communication = user.recv(1024)
+                self.relay_information(communication)
+            except:                                                         
+                guide = self.users.guide(user)
+                self.users.remove(user)
+                user.close()
+                username = self.usernames[guide]
+                self.relay_information("{} has exited the chat room.".format(username).encode("UTF-8"))
+                self.usernames.remove(username)
+                break
+        
+
+    def accept_new_users(self): 
+        """Accepts multiple new clients.
  
            The function uses UTF-8 to both decode and encode any communication that the server has with users.
  
@@ -140,4 +133,17 @@ class UserInformationAndInteractions:
           
            Args:
                self: A variable which means the necessary properties will be inherited from the above
-               __init__ method."""
+               __init__ method."""                                                         
+        while True:
+            user, identifier = host_socket.accept()
+            print("A new user has joined on {}".format(str(identifier)))       
+            user.send('USERNAME'.encode("UTF-8"))
+            username = user.recv(1024).decode("UTF-8")
+            self.usernames.append(username)
+            self.users.append(user)
+            print("For their username a new user has chosen {}".format(username))
+            self.relay_information("{} has connected to the chat room!".format(username).encode("UTF-8"))
+            user.send("\nYou have successfully joined the chat room.".encode("UTF-8"))
+            text = t.Thread(target=self.manage_users, args=(user,))
+            text.start()
+            

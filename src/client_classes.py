@@ -28,16 +28,17 @@ class UserSocket:
         port: An integer which contains the port number that will be used when connecting to the 
         host socket."""
 
+
     def __init__(self):
-        self.ip = "127.0.0.1"
-        self.port_number = 65432
         """Initialises the properties of the class to create the user socket used in the chat room.
 
         The ip and port number properties provide the necessary address details needed for the client
         to connect to the server."""
+        self.ip = "127.0.0.1"
+        self.port_number = 65432
         
-    def connect_to_server(self):    
-        user_socket.connect((self.ip, self.port_number))   
+
+    def connect_to_server(self):   
         """Connects the user to the host server.
         
         The use of the inbuilt connect() function from the socket module allows the user to connect
@@ -45,9 +46,9 @@ class UserSocket:
 
         Args:
             self: A variable which means the necessary properties for the user socket will 
-            be inherited from the above __init__ method."""
-
-
+            be inherited from the above __init__ method.""" 
+        user_socket.connect((self.ip, self.port_number))   
+        
 
 class DataTransfers:
     """The purpose of this class is to contain the two functions which the user uses to both acquire
@@ -56,22 +57,8 @@ class DataTransfers:
     The functions in this class uses UTF-8 to both encode and decode any communication that a user 
     sends or receives from the server."""
 
+
     def acquire_information():
-        while True:                                                 
-            try:
-                communication = user_socket.recv(1024).decode("UTF-8")
-                if communication == "USERNAME":
-                    user_socket.send(username.encode("UTF-8"))
-                else:
-                    print(communication)
-            except s.error:     
-                print("There has been error when trying to communicate with the server! Your connection will now be closed.")
-                user_socket.close()
-                break   
-            except:                                                 
-                print("Something has gone wrong! Your connection will now be closed.")
-                user_socket.close()
-                break
         """The purpose of this function is to receive messages from the server and create a username
         that will be used in the chat room.
 
@@ -93,19 +80,34 @@ class DataTransfers:
             A more general except clause is also added that will be raised if an error occurs which is not related
             to a socket error. Again users will receive a print statement informing them something has gone wrong
             and their connection will be closed. The socket will close after the user receives this print statement."""
+        while True:                                                 
+            try:
+                communication = user_socket.recv(1024).decode("UTF-8")
+                if communication == "USERNAME":
+                    user_socket.send(username.encode("UTF-8"))
+                else:
+                    print(communication)
+            except s.error:     
+                print("There has been error when trying to communicate with the server! Your connection will now be closed.")
+                user_socket.close()
+                break   
+            except:                                                 
+                print("Something has gone wrong! Your connection will now be closed.")
+                user_socket.close()
+                break
+
 
     def send_information():
-        while True:                                                 
-            communication = "{}: {}".format(username, input(""))
-            user_socket.send(communication.encode("UTF-8"))
-            """The purpose of this function is to send messages to the server.
+        """The purpose of this function is to send messages to the server.
 
             The function uses UTF-8 to encode any communication that a user dispatches to the server.
 
             The functions informs the design for how the message is displayed to the host and will be displayed
             to other users. Whatever the user inputs will be encoded before it is sent to the host."""
+        while True:                                                 
+            communication = "{}: {}".format(username, input(""))
+            user_socket.send(communication.encode("UTF-8"))
             
-
 
 class UserThreading:
     """The purpose of this class is to give the necessary properties and functions to enable threading between
@@ -120,10 +122,12 @@ class UserThreading:
        compose_text: A variable which contains the function which begins a separate thread for a user to
        send messages to the host."""
 
+
     def __init__(self):
-        self.acquire_text = t.Thread(target=DataTransfers.acquire_information) 
-        self.compose_text = t.Thread(target=DataTransfers.send_information) 
         """Initialises the properties of the class to create threading in the chat room.
  
        The variables contain the functions which create two threads for each user between them and the client.
        These threads relate to the sending and receiving of communications."""
+        self.acquire_text = t.Thread(target=DataTransfers.acquire_information) 
+        self.compose_text = t.Thread(target=DataTransfers.send_information) 
+        
